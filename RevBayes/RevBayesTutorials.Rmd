@@ -1,0 +1,17 @@
+---
+title: "RevBayes Tutorials"
+output: html_document
+---
+
+Here are the trees from the first tutorial. I couldn't figure out how to get the node labels to show up on these trees.
+```{r}
+beartree <- ape::read.nexus("RevBayes/output/bears_global.mcc.tre")
+ape::plot.phylo(beartree, show.node.label = TRUE)
+
+relaxedclock <- ape::read.nexus("RevBayes/output/bears_relaxed_exponential.mcc.tre")
+ape::plot.phylo(relaxedclock, show.node.label = TRUE)
+
+logrelaxedclock <- ape::read.nexus("RevBayes/output/bears_relaxed_lognormal.mcc.tre")
+ape::plot.phylo(logrelaxedclock, show.node.label = TRUE)
+```
+
