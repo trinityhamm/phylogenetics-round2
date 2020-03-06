@@ -1,0 +1,36 @@
+cytb <- readDiscreteCharacterData("data/bears_cytb.nex")
+taxa <- readTaxonData("data/bears_taxa.tsv")
+cytb.addMissingTaxa( taxa )
+
+n_taxa <- cytb.size()
+
+moves = VectorMoves()
+monitors = VectorMonitors()
+
+#Using this to load in the model scripts from the other files
+source("scripts/tree_FBD.Rev") # BD tree prior
+source("scripts/clock_relaxed_exponential.Rev") # the relaxed clock model
+source("scripts/sub_GTR.Rev") # the GTR model
+
+#Create workspace model
+mymodel = model(sf)
+
+#output files
+monitors.append( mnModel(filename="output/bears_FBD.log", printgen=10) )
+monitors.append( mnFile(filename="output/bears_FBD.trees", printgen=10, pruned_tree) )
+
+#Printing the MRCA of living bears and diversification rate.
+monitors.append( mnScreen(printgen=10, extant_mrca, diversification, branch_rates) )
+
+#Create a workspace variable that define the MCMC run
+mymcmc = mcmc(mymodel, monitors, moves, nruns=2, combine="mixed")
+
+#Execute the analysis and set the chain length to 20000 cycles
+mymcmc.run(generations=20000, tuningInterval=200)
+
+#Creating a summary tree
+trace = readTreeTrace("output/bears_FBD_run_1.trees")
+mccTree(trace, file="output/bears_FBD_run_1.mcc.tre" )
+
+#Quit out of the program
+q()

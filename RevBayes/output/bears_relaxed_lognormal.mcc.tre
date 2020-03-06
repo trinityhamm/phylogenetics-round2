@@ -1,0 +1,21 @@
+#NEXUS
+
+	Begin taxa;
+	Dimensions ntax=10;
+	Taxlabels
+		Ailuropoda_melanoleuca
+		Arctodus_simus
+		Helarctos_malayanus
+		Melursus_ursinus
+		Tremarctos_ornatus
+		Ursus_americanus
+		Ursus_arctos
+		Ursus_maritimus
+		Ursus_spelaeus
+		Ursus_thibetanus
+		;
+End;
+
+Begin trees;
+tree TREE1 = [&R]((((((Ursus_americanus[&index=5]:0.244172,Ursus_thibetanus[&index=6]:0.244172)[&index=11,posterior=0.800133,age_95%_HPD={0.112907,0.391595}]:0.072439,Helarctos_malayanus[&index=4]:0.316611)[&index=12,posterior=0.994004,age_95%_HPD={0.156752,0.478448}]:0.074539,Melursus_ursinus[&index=7]:0.391150)[&index=13,posterior=0.833444,age_95%_HPD={0.206242,0.57078}]:0.064147,(Ursus_arctos[&index=9]:0.101678,Ursus_maritimus[&index=8]:0.101678)[&index=14,posterior=1.000000,age_95%_HPD={0.018606,0.211947}]:0.353619)[&index=15,posterior=1.000000,age_95%_HPD={0.268279,0.667048}]:0.052786,Ursus_spelaeus[&index=10]:0.508084)[&index=16,posterior=0.998668,age_95%_HPD={0.285434,0.725111}]:0.491917,((Arctodus_simus[&index=2]:0.451872,Tremarctos_ornatus[&index=1]:0.451872)[&index=17,posterior=0.999334,age_95%_HPD={0.158499,0.711761}]:0.397359,Ailuropoda_melanoleuca[&index=3]:0.849231)[&index=18,posterior=0.395736,age_95%_HPD={0.652234,1}]:0.150770)[&index=19,posterior=1.000000,age_95%_HPD={1,1}]:0.000000;
+End;

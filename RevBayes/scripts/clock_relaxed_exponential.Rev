@@ -1,0 +1,19 @@
+#Uncorrelated exponential relaxed clock model
+#Setting the mean branch rate as an exponential random variable
+branch_rates_mean ~ dnExponential(10.0)
+moves.append( mvScale(branch_rates_mean, lambda=0.5, tune=true, weight=3.0) )
+
+#Define the number of branches in the tree
+n_branches <- 2 * n_taxa - 2
+
+#using a loop to define the rate for each branch
+for(i in 1:n_branches){
+    branch_rates[i] ~ dnExp(1/branch_rates_mean)
+    moves.append( mvScale(branch_rates[i], lambda=0.5, tune=true, weight=1.0) )
+}
+
+#changing rates and node ages simultaneously across the whole tree
+moves.append( mvVectorScale(branch_rates, lambda=0.5, tune=true, weight=4.0) )
+moves.append( mvRateAgeBetaShift(tree=timetree, rates=branch_rates, tune=true, weight=n_taxa) )
+
+

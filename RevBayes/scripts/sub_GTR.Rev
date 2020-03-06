@@ -1,0 +1,26 @@
+#Define an instantaneous-rate matrix
+sf_hp <- v(1,1,1,1)
+sf ~ dnDirichlet(sf_hp)
+
+er_hp <- v(1,1,1,1,1,1)
+er ~ dnDirichlet(er_hp)
+
+#Making changes to the Dirichlet random variable
+moves.append( mvBetaSimplex(er, alpha=10.0, weight=3.0) )
+moves.append( mvBetaSimplex(sf, alpha=10.0, weight=2.0) )
+
+#Define a deterministic node for the GTR Q-matrix
+Q_cytb := fnGTR(er,sf)
+
+#Model gamma-distributed rates across sites
+alpha_cytb ~ dnUniform(0.0,1E6)
+alpha_cytb.setValue( 1.0 )
+
+moves.append( mvScale(alpha_cytb, lambda=0.5, tune=true, weight=2.0) )
+
+#Create a gamma distribution
+rates_cytb := fnDiscretizeGamma(alpha_cytb, alpha_cytb, 4)
+
+#Create the phylogenetic continuous time Markov chain distribution for sequence data
+phySeq ~ dnPhyloCTMC(tree=timetree, Q=Q_cytb, siteRates=rates_cytb, branchRates=branch_rates, type="DNA")
+phySeq.clamp(cytb)

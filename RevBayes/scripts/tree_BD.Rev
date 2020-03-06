@@ -1,0 +1,37 @@
+#Creating exponetially distributed stochastic nodes for the speciation and extinction rate.
+speciation_rate ~ dnExponential(10)
+extinction_rate ~ dnExponential(10)
+
+#Specifying proposal algorithms to sample the value of the stochastic nodes in proportion to its posterior probability.
+moves.append( mvScale(speciation_rate, lambda=0.5, tune=true, weight=3.0) )
+moves.append( mvScale(extinction_rate, lambda=0.5, tune=true, weight=3.0) )
+
+#You can track the values of diversification and turnover with the := function
+diversification := speciation_rate - extinction_rate
+turnover := extinction_rate/speciation_rate
+
+#rho is the probability of extant species sampling. In this dataset, all of the bears are extinct, so the probability of this is 1.
+rho <- 1.0
+
+#Setting the root at an arbitrary age, since the goal of the exercise is to only infer relative times
+extant_mrca <- 1.0
+
+#Defining the prior distribution on the tree topology & divergence times
+tree_dist = dnBDP(lambda=speciation_rate, mu=extinction_rate, rho=rho, rootAge=extant_mrca, samplingStrategy="uniform", condition="nTaxa", taxa=taxa)
+
+#Making clade constaints based on prior knowledge
+clade_ursinae = clade("Melursus_ursinus", "Ursus_arctos", "Ursus_maritimus", "Helarctos_malayanus", "Ursus_americanus", "Ursus_thibetanus")
+constraints = v(clade_ursinae)
+
+#Specify the final constrained tree.
+timetree ~ dnConstrainedTopology(tree_dist, constraints=constraints)
+
+#Add moves for the tree toplogy
+moves.append( mvNarrow(timetree, weight=n_taxa) )
+moves.append( mvFNPR(timetree, weight=n_taxa/4) )
+moves.append( mvNodeTimeSlideUniform(timetree, weight=n_taxa) )
+moves.append( mvSubtreeScale(timetree, weight=n_taxa/5.0) )
+
+#Monitoring node ages of interest.
+age_ursinae := tmrca(timetree, clade_ursinae)
+
