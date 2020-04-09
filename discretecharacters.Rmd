@@ -1,0 +1,80 @@
+---
+title: "Discrete Characters"
+output: html_document
+---
+
+Cleaning the data and visualizing it:
+```{r}
+devtools::install_github("bomeara/geiger")
+
+library ("ape")
+library ("corHMM")
+library("geiger")
+library("phangorn")
+
+tree <- read.nexus(file = "floral_1.nex")
+#To be able to work with a smaller dataset, I only copied the first 25 species from the binary data file.
+discrete.data <- read.csv(file = "smalldata.csv", row.names = 1, stringsAsFactors = FALSE)
+
+CleanData <- function(phy, data) {
+  treedata(phy = phy, data = data, sort = TRUE)
+}
+
+##Testing the function
+geo <- get(data("geospiza"))
+CleanData(geo$phy, geo$dat)
+
+cleaned_data <- CleanData(tree, discrete.data)
+
+
+
+VisualizeData <- function(phy, data){
+  picture <- plot.phylo(x=phy)
+  table <- print(x=data)
+  together <- View(picture, table)
+  print(together)
+}
+VisualizeData(phy=cleaned_data$phy, data = cleaned_data$data)
+
+```
+Next phases
+```{r}
+cleaned.discrete.phyDat <- phangorn::phyDat(cleaned_data$data, type="USER", levels = c("0", "1")) #phyDat is a data format used by phangorn
+anc.p <- phangorn::ancestral.pars(cleaned_data$phy, cleaned.discrete.phyDat)
+plotAnc(cleaned_data$phy, anc.p)
+
+anc.ml <- ancestral.pml(pml(cleaned_data$phy, cleaned.discrete.phyDat), type="ml")
+plotAnc(cleaned_data$phy, anc.ml, 1)
+```
+The maximum likelihood plots differ from the parsimony plots in that the parsimony plots assume that the ancestral states were ones that had the least amount of changes to get to the current morphological state. Maximum likelihood gives equal probability to each state.
+```{r}
+#the function rayDISC needed the rownames in the matrix to be an actual column
+library("data.table")
+noname <- data.table(cleaned_data$data, keep.rownames = TRUE)
+tr1 <- rayDISC(cleaned_data$phy, noname, model = "ARD", node.states = "marginal")
+tr2 <- rayDISC(cleaned_data$phy, noname, charnum = 2, model = "ARD", node.states = "marginal")
+tr3 <- rayDISC(cleaned_data$phy, noname, charnum = 3, model = "ARD", node.states = "marginal")
+tr4 <- rayDISC(cleaned_data$phy, noname, charnum = 4, model = "ARD", node.states = "marginal")
+tr5 <- rayDISC(cleaned_data$phy, noname, charnum = 5, model = "ARD", node.states = "marginal")
+tr6 <- rayDISC(cleaned_data$phy, noname, charnum = 6, model = "ARD", node.states = "marginal")
+
+tr1
+tr2
+tr3
+tr4
+tr5
+tr6
+```
+Questions:  
+1) The outputs are for each of the 6 character traits that were present in the dataset.  
+2) A T-test could be performed to see if the transition rate from 0 to 1 is the same as the rate from 1 to 0 for each of the character traits.   
+3) All of the traits are variable, which introduces acquisition bias and can lead to overestimation in branch lengths.As long as this bias is accounted for, the MKV model could be used. In the details section of the lewisMkv function, it says it accounts for all of the traits being variable.
+```{r}
+mkv <- lewisMkv(phy = cleaned_data$phy, data = cleaned_data$data, include.gamma = TRUE)
+mkv
+plot(mkv$phy)
+plotAnc(cleaned_data$phy, anc.p)
+```
+  
+The branch lengths obviously change, but the overall layout of the tree is basically the same. The MKV tree has a lot of polytomies as well.  
+4) Since these characters are only binary, testing the state evolution is just seeing if the 0 or 1 state came first. This could be determined by looking at the probability of the ancestral state at the root. Which ever state is more likely there, is the one that came first. 
