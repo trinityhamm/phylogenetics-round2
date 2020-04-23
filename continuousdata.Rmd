@@ -1,0 +1,167 @@
+---
+title: "Continuous Characters"
+output:
+  html_document: default
+---
+
+```{r, cache=TRUE}
+library(ape)
+library(geiger)
+library(OUwie)
+library(gdata)
+library(RCurl)
+
+tree<-read.tree(text=getURL("https://raw.githubusercontent.com/lukejharmon/pcm/master/datafiles/squamate.phy"))
+sqdata <- read.csv(text=getURL("https://raw.githubusercontent.com/lukejharmon/pcm/master/datafiles/brandley_table.csv"), row.names = 1, check.names = TRUE, stringsAsFactors = FALSE)
+rownames(sqdata) <- sub(" ", "_", rownames(sqdata))
+
+#putting the continuous data in one object
+contin_data <- as.matrix(sqdata[,2])
+rownames(contin_data) <- row.names(sqdata)
+class(contin_data)
+
+discrete_data <- sqdata[,c(15, 16)]
+
+#Clean data
+CleanData <- function(phy, data) {
+  treedata(phy = phy, data = data, sort = TRUE, warnings = TRUE)
+}
+
+cleaned_data <- CleanData(tree, contin_data)
+cleaned_discrete <- CleanData(phy = tree, data = discrete_data)
+
+#Visualizing data
+cleaned_tree <- cleaned_data$phy
+chrono_tree <- ape::chronos(cleaned_tree)
+ape::is.ultrametric(chrono_tree)
+cleaned_contin <- as.vector(cleaned_data$data)
+is.vector(cleaned_contin)
+names(cleaned_contin) <- make.names(row.names(cleaned_data$data))
+
+VisualizeData <- function(phy, data) {
+ pretty_pic <- phytools::contMap(tree = phy, x = data, fsize = c(.2,1), lwd = 2)
+ polytomy <- is.binary(phy = phy)
+ pretty_pic
+ print(paste("Is the tree binary?", polytomy))
+}
+
+str(cleaned_contin)
+
+VisualizeData(chrono_tree, cleaned_contin)
+
+#Rate of Evolution
+BM1 <- geiger::fitContinuous(chrono_tree, cleaned_contin, model="BM")
+print(paste("The rate of evolution is", BM1$opt$sigsq, "in units of mm/million years" ))
+
+OU1 <- fitContinuous(chrono_tree, cleaned_contin, model="OU")
+par(mfcol=c(1,2))
+plot(chrono_tree, show.tip.label=FALSE)
+ou.tree <- geiger::rescale(chrono_tree, model="OU", alpha = OU1$opt$alpha)
+plot(ou.tree, cex = .2)
+
+```
+  
+The trees differ in their branch lengths. The rescaled tree condenses the branch lengths of older part of the tree and expands it closer to the tips.  
+
+```{r, cache=TRUE}
+AIC_BM1 <- BM1$opt$aic
+AIC_OU1 <- OU1$opt$aic
+delta_AIC_BM1 <- BM1$opt$aic - BM1$opt$aicc
+delta_AIC_OU1 <- OU1$opt$aic - OU1$opt$aicc
+all_aic <- matrix(c(AIC_BM1, delta_AIC_BM1, AIC_OU1, delta_AIC_OU1),ncol = 1)
+rownames(all_aic) <- c("BM1 AIC", "delta BM1 AIC", "OU1 AIC", "delta OU1 AIC")
+all_aic <- as.table(all_aic)
+print(all_aic)
+
+one_discrete_char <- cleaned_discrete$dat[,1]
+reconstruction.info <- ape::ace(one_discrete_char, cleaned_discrete$phy, type="discrete", method="ML", CI=TRUE)
+best.states <- colnames(reconstruction.info$lik.anc)[apply(reconstruction.info$lik.anc, 1, which.max)]
+
+chrono_tree$node.labels <- best.states
+
+clean_data_df <- as.data.frame(cleaned_data$data)
+library(data.table)
+library(tibble)
+clean_data_df <- data.table(clean_data_df, keep.rownames = TRUE)
+clean_data_df <- add_column(clean_data_df, one_discrete_char, .after = 1)
+
+nodeBased.OUMV <- OUwie::OUwie(chrono_tree, clean_data_df, model="OUMV", simmap.tree=FALSE, diagn=FALSE)
+print(nodeBased.OUMV)
+```
+
+```{r, cache=TRUE}
+models <- c("BM1","BMS","OU1","OUM","OUMV","OUMA","OUMVA")
+results <- lapply(models, OUwie::OUwie, phy=chrono_tree, data=clean_data_df)
+
+AICc.values<-sapply(results, "[[", "AICc")
+names(AICc.values)<-models
+AICc.values<-AICc.values-min(AICc.values)
+
+
+print(AICc.values) #The best model is the one with smallest AICc score
+
+best<-results[[which.min(AICc.values)]] #store for later
+
+print(best) #prints info on best model
+
+#I picked alpha values that tried to cover all of the alpha values for the different states from the best model.
+alpha.values<-seq(from= .1, to= 5, length.out=50)
+
+likelihood.values <- rep(NA, length(alpha.values))
+for (iteration in sequence(length(alpha.values))) {
+    likelihood.values[iteration] <- OUwie::OUwie.fixed(chrono_tree, clean_data_df, model="OUMV", alpha=rep(alpha.values[iteration], times=1), sigma.sq=best$solution[2,], theta=best$theta[,1])$loglik[1]
+}
+```
+```{r, cache=TRUE}
+plot(x= alpha.values, y= likelihood.values, xlab="Alpha", ylab="Likelihood", type="l", bty="n", ylim = c(-1580, -1370))
+points(x=best$solution[1,1], y=best$loglik, pch=16, col="red")
+text(x=best$solution[1,1], y=best$loglik, "unconstrained best", pos=4, col="red")
+abline(h=best$loglik-2, lty="dotted")
+
+library(akima)
+nreps<-400
+theta1.points<-c(best$theta[1,1], rnorm(nreps-1, best$theta[1,1], 5*best$theta[1,2])) #center on optimal value, have extra variance
+theta2.points<-c(best$theta[2,1], rnorm(nreps-1, best$theta[2,1], 5*best$theta[2,2])) #center on optimal value, have extra variance
+theta3.points<-c(best$theta[3,1], rnorm(nreps-1, best$theta[3,1], 5*best$theta[3,2]))
+
+likelihood.values<-rep(NA,nreps)
+
+for (iteration in sequence(nreps)) {
+    likelihood.values[iteration] <- OUwie::OUwie.fixed(chrono_tree, clean_data_df, model="OUMV", alpha=best$solution[1,], sigma.sq=best$solution[2,], theta=c(theta1.points[iteration], theta2.points[iteration], theta3.points[iteration]))$loglik
+}
+
+likelihood.differences<-(-(likelihood.values-max(likelihood.values)))
+
+```
+```{r}
+head(theta1.points)
+head(theta2.points)
+head(theta3.points)
+```
+My discrete data had 3 states (0,1,and 2), so I had to add an additional theta vector to the iteration. I'm not sure how to add an additional dimension to get those all to plot against the likelihood differences. Also, the range between theta 1 and 2 are too different to be able to plot.  
+
+```{r}
+interpolated.points<-akima::interp(x=theta1.points, y=theta3.points, z= likelihood.differences, linear=FALSE, extrap=TRUE, xo=seq(min(theta1.points), max(theta1.points), length = 400), yo=seq(min(theta3.points), max(theta3.points), length = 400))
+
+contour(interpolated.points, xlim=range(c(theta1.points, theta3.points)),ylim=range(c(theta1.points, theta3.points)), xlab="Theta 1", ylab="Theta 3", levels=c(2,5,10),add=FALSE,lwd=1, bty="n", asp=1)
+
+points(x=best$theta[1,1], y=best$theta[3,1], col="red", pch=16)
+
+points(x=clean_data_df$one_discrete_char[which(clean_data_df$Reg==0)],y=rep(min(c(theta1.points, theta3.points)), length(which(clean_data_df$Reg==0))), pch=18, col=rgb(0,0,0,.3)) #the tip values in regime 1, plotted along x axis
+points(y=clean_data_df$one_discrete_char[which(clean_data_df$Reg==2)],x=rep(min(c(theta1.points, theta3.points)), length(which(clean_data_df$Reg==2))), pch=18, col=rgb(0,0,0,.3)) #the tip values in regime 2, plotted along y axis
+
+library(phytools)
+trait.ordered<-data.frame(clean_data_df[,2], clean_data_df[,2], row.names=clean_data_df[,1])
+trait.ordered<- trait.ordered[chrono_tree$tip.label,]
+z<-trait.ordered[,1]
+names(z)<-rownames(trait.ordered)
+tree.mapped<-make.simmap(chrono_tree,z,model="ER",nsim=1)
+leg<-c("black","red")
+names(leg)<-c(1,2)
+plotSimmap(tree.mapped,leg,pts=FALSE,ftype="off", lwd=1)
+
+simmapBased<-OUwie::OUwie(tree.mapped,clean_data_df,model="OUMV", simmap.tree=TRUE, diagn=FALSE)
+print(simmapBased)
+print(best)
+```
+Based on the AIC values, the best model from above was better than the simmap based one. These two probably shouldn't be directly comparable, at least with this dataset since the sigsq values are so high for the 0 and 1 states.  
