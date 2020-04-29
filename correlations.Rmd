@@ -1,0 +1,109 @@
+---
+title: "Correlations"
+output: html_document
+---
+
+```{r}
+library(geiger)
+library(ape)
+tree.primates <- read.tree(text="((((Homo:0.21,Pongo:0.21):0.28,Macaca:0.49):0.13,Ateles:0.62):0.38,Galago:1.00);") #using examples from ape ?pic
+X <- c(4.09434, 3.61092, 2.37024, 2.02815, -1.46968)
+Y <- c(4.74493, 3.33220, 3.36730, 2.89037, 2.30259)
+names(X) <- names(Y) <- c("Homo", "Pongo", "Macaca", "Ateles", "Galago")
+pic.X <- pic(X, tree.primates)
+pic.Y <- pic(Y, tree.primates)
+
+require("corHMM")
+data(primates)
+ls()
+print(primates)
+require(phytools)
+
+primates$trait[which(grepl("Hylobates",primates$trait[,1])),2]<-1
+
+trait1<-primates$trait[,2]
+names(trait1)<-primates$trait[,1]
+primates$tree <- ape::multi2di(primates$tree)
+plotSimmap(make.simmap(primates$tree, trait1), pts=FALSE, fsize=0.8)
+rate.mat.er<-rate.mat.maker(rate.cat=1, hrm=FALSE, ntraits=1, nstates=2, model="ER")
+print(rate.mat.er)
+```
+This rate matrix sets the rate of state 1 going to 2 and 2 going to 1 as equal.  
+```{r}
+pp.er<-corHMM(primates$tree,primates$trait[,c(1,2)],rate.cat=1,rate.mat=rate.mat.er,node.states="marginal")
+print(pp.er)
+```
+Since the AIC value is pretty low, the outputted rates are a good estimation of the states changing. According to this method, the rate of state 0 going to state 1 and vice versa is 0.0107641.  
+```{r}
+rate.mat.ard<-rate.mat.maker(rate.cat=1, hrm=FALSE, ntraits=1, nstates=2, model="ARD")
+print(rate.mat.ard)
+```
+The rates of state 1 going to 2 is allowed to differ from the rate of state 2 going to 1.  
+```{r}
+pp.ard<-corHMM(primates$tree,primates$trait[,c(1,2)],rate.cat=1,rate.mat=rate.mat.ard,node.states="marginal")
+print(pp.ard)
+```
+Since the AIC value is slightly lower than with the last rate matrix model, this model is a little bit of a better fit for the data. So, the rate of state 0 going to state 1 is 0.010329 and the rate of state 1 going to state 0 is 0.01128.  
+```{r}
+rate.mat.er.4state<-rate.mat.maker(rate.cat=1, hrm=FALSE, ntraits=1, nstates=4, model="ER")
+print(rate.mat.er.4state)
+
+fourstate.trait<-rep(NA,Ntip(primates$tree))
+for(i in sequence(Ntip(primates$tree))) {
+    if(primates$trait[i,2]==0 && primates$trait[i,3]==0) {
+        fourstate.trait[i]<-0
+    }
+    if(primates$trait[i,2]==0 && primates$trait[i,3]==1) {
+        fourstate.trait[i]<-1
+    }
+    if(primates$trait[i,2]==1 && primates$trait[i,3]==0) {
+        fourstate.trait[i]<-2
+    }
+    if(primates$trait[i,2]==1 && primates$trait[i,3]==1) {
+        fourstate.trait[i]<-3
+    }
+}
+fourstate.data<-data.frame(Genus_sp=primates$trait[,1], T1=fourstate.trait)
+
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, model="ER", node.states="marginal"))
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat=rate.mat.er.4state, node.states="marginal", model="ARD"))
+rate.mat.ard.4state<-rate.mat.maker(rate.cat=1, hrm=FALSE, ntraits=1, nstates=4, model="ARD")
+print(rate.mat.ard.4state)
+
+rate.mat.gtr.4state<-rate.mat.ard.4state
+rate.mat.gtr.4state<-rate.par.eq(rate.mat.gtr.4state, c(1,4))
+rate.mat.gtr.4state<-rate.par.eq(rate.mat.gtr.4state, c(2,6))
+rate.mat.gtr.4state<-rate.par.eq(rate.mat.gtr.4state, c(3,8))
+rate.mat.gtr.4state<-rate.par.eq(rate.mat.gtr.4state, c(4,6))
+rate.mat.gtr.4state<-rate.par.eq(rate.mat.gtr.4state, c(5,7))
+rate.mat.gtr.4state<-rate.par.eq(rate.mat.gtr.4state, c(6,7))
+print(rate.mat.gtr.4state)
+
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat= rate.mat.gtr.4state, node.states="marginal", model="ARD"))
+
+print(rate.mat.maker(rate.cat=1, hrm=FALSE, ntraits=2, nstates=2, model="ARD"))
+rate.mat.pag94<-rate.par.drop(rate.mat.ard.4state, drop.par=c(3,5,8,10))
+print(rate.mat.pag94)
+
+#Testing Pagel 1994
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat= rate.mat.pag94, node.states="marginal", model="ARD"))
+
+rate.mat.never.lose1 <- rate.par.drop(rate.mat.ard.4state, drop.par=c(1,8,11))
+print(rate.mat.never.lose1)
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat= rate.mat.never.lose1, node.states="marginal", model="ARD"))
+```
+I'd say it's unlikely that state one is never lost because the AIC value is relatively high compared to the other models and parameters.  
+```{r}
+#Estimated transition rates are used to set the weights at the root.
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat= rate.mat.never.lose1, node.states="marginal", model="ARD", root.p = "yang"))
+#Maddison and FitzJohn
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat= rate.mat.never.lose1, node.states="marginal", model="ARD", root.p = "maddfitz"))
+```
+```{r}
+two.states <- rate.mat.maker(rate.cat=1, hrm=FALSE, ntraits=2, nstates=2, model="ARD")
+#Only allowing 00 to go to 01 and 01 to go to 11.
+rate.mat.two.states <- rate.par.drop(two.states, drop.par=c(1,2,4,5,6,8))
+print(rate.mat.two.states)
+print(rayDISC(primates$tree, fourstate.data, ntraits=1, rate.mat= rate.mat.two.states, node.states="marginal", model="ARD"))
+```
+Since the AIC is really high, I'd say it is unlikely that state 00 can only go to 01 and then 11.
