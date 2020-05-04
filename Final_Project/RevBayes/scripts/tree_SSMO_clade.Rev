@@ -1,0 +1,38 @@
+#Creating exponetially distributed stochastic nodes for the speciation and extinction rate.
+speciation_rate ~ dnExponential(10)
+extinction_rate ~ dnExponential(10)
+
+#Specifying proposal algorithms to sample the value of the stochastic nodes in proportion to its posterior probability.
+moves.append( mvScale(speciation_rate, lambda=0.5, tune=true, weight=3.0) )
+moves.append( mvScale(extinction_rate, lambda=0.5, tune=true, weight=3.0) )
+
+#You can track the values of diversification and turnover with the := function
+diversification := speciation_rate - extinction_rate
+turnover := extinction_rate/speciation_rate
+
+#rho is the probability of extant species sampling. In this dataset, all of the samples are alive, so I set it small
+rho <- .01
+
+#Setting the root at an arbitrary age, since the goal of the exercise is to only infer relative times
+extant_mrca <- 1.0
+
+#Defining the prior distribution on the tree topology & divergence times
+tree_dist = dnBDP(lambda=speciation_rate, mu=extinction_rate, rho=rho, rootAge=extant_mrca, samplingStrategy="uniform", condition="nTaxa", taxa=taxa)
+
+#Making clade constaints based on prior knowledge
+clade_occidentalis = clade("Cercis_occidentalis_CP1", "Cercis_occidentalis_CP2", "Cercis_occidentalis_CP3", "Cercis_occidentalis_CP4", "Cercis_occidentalis_CP5")
+clade_SSMO = clade("Cercis_canadensis_mexicana_SSMO_1", "Cercis_canadensis_mexicana_SSMO_2", "Cercis_canadensis_mexicana_SSMO_3", "Cercis_canadensis_mexicana_SSMO_4", "Cercis_canadensis_mexicana_SSMO_5")
+constraints = v(clade_occidentalis, clade_SSMO)
+
+#Specify the final constrained tree.
+timetree ~ dnConstrainedTopology(tree_dist, constraints=constraints)
+
+#Add moves for the tree toplogy
+moves.append( mvNarrow(timetree, weight=n_taxa) )
+moves.append( mvFNPR(timetree, weight=n_taxa/4) )
+moves.append( mvNodeTimeSlideUniform(timetree, weight=n_taxa) )
+moves.append( mvSubtreeScale(timetree, weight=n_taxa/5.0) )
+
+#Monitoring node ages of interest.
+age_SSMO := tmrca(timetree, clade_SSMO)
+

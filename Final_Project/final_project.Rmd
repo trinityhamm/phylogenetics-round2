@@ -1,0 +1,147 @@
+---
+title: "Class Project"
+output: html_document
+---
+
+For my project I decided to look more into two studies that were done on the Cercis genus. These two studies attempted to better resolve the Cercis genus as a whole, especially the species in North America. Historically, it has been assumed that there are only two species of Cercis in North America: Cercis occidentalis and Cercis canadensis. Cercis canadensis has a host range across the Eastern United States down into Mexico. There are considered to be three varieties of Cercis canadensis. There has been some debate as to whether or not the varieties should be considered separate species due to their wide morphological variation.  
+  
+### Species Delimitation with BPP
+I first used the BPP program to use a different tool to see how many species there should be in North America. Their study included a variety of Cercis species from Asia, but I only included one species from Asia in my analysis.   
+  
+First, the DNA sequence data needed to be changed from Nexus format to phylip. I used the NCLconverter on CIPRES  to convert the file. I then ran the species delimintation using rjMCMC (A10) analysis on the data.  
+```{r, echo=FALSE, cache=TRUE}
+library(ape)
+model <- c(0000, 1000, 1100, 1110, 1111)
+prior <- c(.2, .2, .2, .2, .2)
+posterior <- c(0.000000, 0.014460, 0.92888, 0.054260, 0.002400)
+knitr::kable(cbind(model, prior, posterior), format = "markdown")
+A10_tree<- ape::read.tree(text="(siliquastrum,((canadensis_canadensis,(canadensis_texensis,canadensis_mexicana)), occidentalis));")
+A10_tree$node.labels <- c(1,2,3,4)
+plot.phylo(A10_tree, show.node.label = TRUE)
+```
+  
+Based on these results, nodes 1 and 2 are well resolved because the posterior probability for 1100 is the highest.  
+I also used the joint species delimitation and species tree estimation (A11) portion of the program. Based on this, the most likely species tree is:  
+```{r, echo=FALSE}
+A11_tree <- ape::read.tree(text = "(siliquastrum,((canadensis_canadensis,canadensis_texensis,canadensis_mexicana), occidentalis));")
+plot(A11_tree)  
+```  
+  
+The posterior probability of this tree is 0.679. The most likely number of species is 3, with a posterior probability of 0.877.  
+  
+The program uses a rjMCMC method, so including the two species other than canadensis should not make a difference as to the number of species within this part of the population, but I ran just the canadensis varieties just to make sure. It returned a posterior probability of 1.0 that the varieties of Cercis canadensis are truly one species. The authors brought up that more loci could potentially help with species delimitation. All of my scripts and outputs are in the bpp_files folder.  
+
+### Making a Tree  
+
+In order to do anything else with the data, I first made a tree because the authors only made the sequence data available. I used RevBayes to make this tree. I played around a little bit with the clade constraints, but the likelihood was basically the same for both trees. The tree I use for this project made all the occidentalis samples one clade and all of the SSMO (sothern Serria Madre Oriental) samples another clade. The samples from the SSMO were in a cloud forest in Mexico, so I figured it was a relatively safe assumption that they should be considered a clade. All scripts and outputs are in the RevBayes folder.  
+
+```{r, cache=TRUE}
+cercis_tree <- treeio::read.beast("cercis_relaxed_SSMO_clade.mcc.tre") #the only way to read in the posterior values; can't use plot.phylo with this object though
+ggtree::ggtree(cercis_tree)  +
+    ggtree::geom_nodelab(ggtree::aes(x=branch, label=round(posterior, 2)), vjust=-.5, size=3) +
+  ggtree::geom_tiplab() + ggtree::xlim(0, 1.5)
+```
+  
+### Further analysis  
+
+Their study consisted of two parts where they measured a variety of herbarium specimens to do linear regression analysis on and where they extracted DNA from live specimens to do the phylogenetic analysis on. They didn't record any characteristics of the live specimens they took tissue samples from. In order to get discrete data to correspond with the tree made from the sequence data, I used the working group characteristics they used to categorize the herbarium samples. This is based off the assumption that the trees that DNA was extracted from were categorized down to the variety level based on the same criteria.  
+```{r, cache=TRUE}
+library(phangorn)
+library(ape)
+library(geiger)
+
+simple_cercis_tree <- ape::read.nexus("cercis_relaxed_SSMO_clade.mcc.tre")
+data <- read.csv("cercis_binary.csv", row.names = 1)
+knitr::kable(data)
+
+#convert to binary data
+column <- c(2,2,2,3,3,3,4,4,5,5)
+trait <- c("cordate","intermediate","reniform","small","intermediate","large","thin","thick","small","large")
+binarychar <- c(0,1,2,0,1,2,0,1,0,1)
+
+  
+convert2binary <- function(data, column, trait, binarychar) {
+  data[,column] <- gsub(trait, binarychar, data[,column])
+  return(data)
+}
+
+loop2binary <- function(data, column, trait, binarychar){
+for (iteration in sequence(length(column))) {
+  data <- convert2binary(data = data, column = column[iteration], trait = trait[iteration], binarychar = binarychar[iteration])
+}
+  return(data)
+}
+
+#This is probably super clumsy but this was my first ever for loop !!!!
+
+data <- loop2binary(data, column, trait, binarychar)
+
+knitr::kable(data)
+
+#Clean the data
+
+cleaned_data <- geiger::treedata(phy = simple_cercis_tree, data = data)
+#I broke up the characters based on the total number of states they have
+cleaned_binary <- cleaned_data$data[,c(1,4,5)]
+cleaned_3states <- cleaned_data$data[,c(2,3)]
+
+cleaned_phyDat_binary <- phangorn::phyDat(cleaned_binary, type="USER", levels = c("0", "1"))
+cleaned_phyDat_3 <- phangorn::phyDat(cleaned_3states, type="USER", levels = c("0", "1", "2"))
+anc_ml_binary <- ancestral.pml(pml(cleaned_data$phy, cleaned_phyDat_binary), type="ml")
+anc_ml_3 <- ancestral.pml(pml(cleaned_data$phy, cleaned_phyDat_3), type="ml")
+
+```
+
+```{r, echo=FALSE, cache=TRUE}
+plotAnc(cleaned_data$phy, anc_ml_binary, 1)
+title("Branchlet Pubescence")
+plotAnc(cleaned_data$phy, anc_ml_binary, 2)
+title("Leaf Thickness")
+plotAnc(cleaned_data$phy, anc_ml_binary, 3)
+title("Flower Length")
+plotAnc(cleaned_data$phy, anc_ml_3, 1)
+title("Leaf Shape")
+plotAnc(cleaned_data$phy, anc_ml_3, 2)
+title("Leaf Size")
+
+```
+  
+Before I get into discussing these results, these ancestral states mapped on my tree should definitely be taken with a grain of salt since the posterior likelihoods were pretty low for the later nodes. Therefore, the whole layout of the tree isn't the most reliable. But that's all I have so here goes nothing: the overall topolgy of the tree reflects the intermediacy of var. texensis between var. canadensis and var. mexicana, since some texensis samples are grouped with canadensis and other are grouped with mexicana.  
+Historically, the presence or absence of branchlet pubescence has been a major factor in differentiating between the different varieties. It has been discussed before that this morphological feature shouldn't be used anymore to distinguish between the varieties.  Based on the branchlet pubescence showing up in various clades, I would agree that this morphological feature isn't the most useful for distinguishing between the varieties from a phylogenetic standpoint. This is reflected through out the rest of the characters as well. I think the best course of action would be to get more loci to make a better tree (with higher posterior probabilities) and then map out these characters again.   
+
+```{r, cache=TRUE}
+library("data.table")
+library(corHMM)
+noname <- data.table(cleaned_data$data, keep.rownames = TRUE)
+pubescence <- rayDISC(cleaned_data$phy, noname, charnum = 1, model = "ARD", node.states = "marginal")
+shape <- rayDISC(cleaned_data$phy, noname, charnum = 2, model = "ARD", node.states = "marginal")
+size <- rayDISC(cleaned_data$phy, noname, charnum = 3, model = "ARD", node.states = "marginal")
+thickness <- rayDISC(cleaned_data$phy, noname, charnum = 4, model = "ARD", node.states = "marginal")
+flower <- rayDISC(cleaned_data$phy, noname, charnum = 5, model = "ARD", node.states = "marginal")
+
+AIC_values <- c(pubescence$AIC, shape$AIC, size$AIC, thickness$AIC, flower$AIC)
+names(AIC_values) <- c("pubescence", "shape", "size", "thickness", "flower")
+print(AIC_values)
+pubescence$solution
+shape$solution
+size$solution
+thickness$solution
+flower$solution
+```
+  
+In order to look into these characters further, I used rayDISC to estimate the rate of state evolution. The table is the AIC values for the characters. Based on the AIC values, those rates of evolution models are not terrible fits for the given data. The flower length matches up the best with the topology of the tree, so it makes sense that it would have the lowest AIC value. This is probably a stretch of a conclusion, but relatively speaking these results seem to indicate that flower length and leaf thickness are more correlated with ancestry than the other characters. As mentioned before, I think a better tree would help resolve this.    
+
+In order to test this I switched the state of the pubescence for the texensis samples that were grouped with the mexicana samples.
+
+```{r}
+made_up_data <- read.csv("madeuppuescence.csv", row.names = 1)
+made_up_cleaned <-  geiger::treedata(phy = simple_cercis_tree, data = made_up_data)
+made_up_noname <- data.table::data.table(made_up_cleaned$data, keep.rownames = TRUE)
+made_up_pubescence <- corHMM::rayDISC(made_up_cleaned$phy, made_up_noname, charnum = 1, model = "ARD", node.states = "marginal")
+print(made_up_pubescence)
+```  
+  
+The AIC is lower, so this would appear to fit the data better if the character states were to better reflect the topology of the tree.  
+  
+### Overall Conclusions  
+More loci are definitely needed to make a better tree. More sequence data could also be helpful in looking at species delimitation and if the different varieties should be considered different species. If a better tree is obtained I think these functions and tests would have more biological relevance. There is also definitely introgression of these varieties in the wild since they all inhabit areas of south-central U.S.. Therefore better sampling of that area would also be beneficial. It would also be beneficial if there was a study that actually measured morphological characteristics on the trees that were sampled for DNA sequencing. Then continuous data could be added to the analysis (so the data wouldn't just be me assuming the character traits). 

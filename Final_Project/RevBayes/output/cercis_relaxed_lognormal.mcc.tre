@@ -1,0 +1,39 @@
+#NEXUS
+
+	Begin taxa;
+	Dimensions ntax=28;
+	Taxlabels
+		Cercis_canadensis_canadensis_1
+		Cercis_canadensis_canadensis_2
+		Cercis_canadensis_canadensis_3
+		Cercis_canadensis_canadensis_4
+		Cercis_canadensis_mexicana_1
+		Cercis_canadensis_mexicana_2
+		Cercis_canadensis_mexicana_3
+		Cercis_canadensis_mexicana_4
+		Cercis_canadensis_mexicana_5
+		Cercis_canadensis_mexicana_6
+		Cercis_canadensis_mexicana_SSMO_1
+		Cercis_canadensis_mexicana_SSMO_2
+		Cercis_canadensis_mexicana_SSMO_3
+		Cercis_canadensis_mexicana_SSMO_4
+		Cercis_canadensis_mexicana_SSMO_5
+		Cercis_canadensis_texensis_1
+		Cercis_canadensis_texensis_2
+		Cercis_canadensis_texensis_3
+		Cercis_canadensis_texensis_4
+		Cercis_occidentalis_CP1
+		Cercis_occidentalis_CP2
+		Cercis_occidentalis_CP3
+		Cercis_occidentalis_CP4
+		Cercis_occidentalis_CP5
+		Cercis_siliquastrum_1
+		Cercis_siliquastrum_2
+		Cercis_siliquastrum_3
+		Cercis_siliquastrum_4
+		;
+End;
+
+Begin trees;
+tree TREE1 = [&R](((((((((Cercis_canadensis_mexicana_2[&index=17]:0.062913,Cercis_canadensis_texensis_1[&index=20]:0.062913)[&index=29,posterior=0.151233,age_95%_HPD={0.000281,0.198865}]:0.048723,Cercis_canadensis_mexicana_1[&index=8]:0.111637)[&index=30,posterior=0.063957,age_95%_HPD={0.012785,0.251542}]:0.108636,(Cercis_canadensis_mexicana_3[&index=7]:0.061684,Cercis_canadensis_texensis_3[&index=15]:0.061684)[&index=31,posterior=0.147901,age_95%_HPD={0.000223,0.169961}]:0.158589)[&index=32,posterior=0.593604,age_95%_HPD={0.046948,0.441323}]:0.037716,Cercis_canadensis_mexicana_4[&index=9]:0.257989)[&index=33,posterior=0.347768,age_95%_HPD={0.074665,0.499499}]:0.293396,((((Cercis_canadensis_mexicana_6[&index=14]:0.121519,Cercis_canadensis_mexicana_SSMO_1[&index=21]:0.121519)[&index=34,posterior=0.128581,age_95%_HPD={0.001566,0.323655}]:0.134426,Cercis_canadensis_mexicana_SSMO_4[&index=4]:0.255945)[&index=35,posterior=0.029980,age_95%_HPD={0.060331,0.44457}]:0.137334,((Cercis_canadensis_mexicana_SSMO_2[&index=18]:0.119464,Cercis_canadensis_mexicana_SSMO_3[&index=23]:0.119464)[&index=36,posterior=0.112592,age_95%_HPD={0.000189,0.359834}]:0.062912,Cercis_canadensis_texensis_4[&index=12]:0.182376)[&index=37,posterior=0.019987,age_95%_HPD={0.040455,0.295811}]:0.210903)[&index=38,posterior=0.012658,age_95%_HPD={0.191477,0.62878}]:0.051089,Cercis_canadensis_mexicana_SSMO_5[&index=11]:0.444369)[&index=39,posterior=0.049300,age_95%_HPD={0.218119,0.77302}]:0.107016)[&index=40,posterior=0.040640,age_95%_HPD={0.384555,0.779009}]:0.045650,(((Cercis_canadensis_canadensis_2[&index=10]:0.066524,Cercis_canadensis_canadensis_4[&index=1]:0.066524)[&index=41,posterior=0.211859,age_95%_HPD={0.00025,0.203768}]:0.088736,(Cercis_canadensis_canadensis_3[&index=2]:0.070538,Cercis_canadensis_texensis_2[&index=16]:0.070538)[&index=42,posterior=0.189873,age_95%_HPD={0.000295,0.225208}]:0.084722)[&index=43,posterior=0.195869,age_95%_HPD={0.026388,0.313274}]:0.094814,Cercis_canadensis_canadensis_1[&index=22]:0.250075)[&index=44,posterior=1.000000,age_95%_HPD={0.049955,0.472974}]:0.346960)[&index=45,posterior=0.043971,age_95%_HPD={0.425572,0.763103}]:0.060430,Cercis_canadensis_mexicana_5[&index=3]:0.657465)[&index=46,posterior=0.981346,age_95%_HPD={0.412196,0.898766}]:0.220636,(((Cercis_occidentalis_CP1[&index=26]:0.116781,Cercis_occidentalis_CP5[&index=28]:0.116781)[&index=47,posterior=0.407728,age_95%_HPD={0.000422,0.318359}]:0.124714,Cercis_occidentalis_CP4[&index=27]:0.241495)[&index=48,posterior=0.330446,age_95%_HPD={0.047343,0.530351}]:0.161560,(Cercis_occidentalis_CP2[&index=25]:0.081830,Cercis_occidentalis_CP3[&index=24]:0.081830)[&index=49,posterior=1.000000,age_95%_HPD={0,0.252181}]:0.321225)[&index=50,posterior=1.000000,age_95%_HPD={0.116499,0.725364}]:0.475046)[&index=51,posterior=0.432378,age_95%_HPD={0.696971,0.999707}]:0.121900,(((Cercis_siliquastrum_1[&index=6]:0.431223,Cercis_siliquastrum_2[&index=13]:0.431223)[&index=52,posterior=0.225183,age_95%_HPD={0.222042,0.651853}]:0.067853,Cercis_siliquastrum_4[&index=5]:0.499075)[&index=53,posterior=0.964024,age_95%_HPD={0.251381,0.752476}]:0.134158,Cercis_siliquastrum_3[&index=19]:0.633233)[&index=54,posterior=0.982678,age_95%_HPD={0.407619,0.912997}]:0.366768)[&index=55,posterior=1.000000,age_95%_HPD={1,1}]:0.000000;
+End;

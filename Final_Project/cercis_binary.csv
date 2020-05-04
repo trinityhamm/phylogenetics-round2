@@ -1,0 +1,24 @@
+sample,Branchlet pubescence,Leaf shape,Leaf size,leaf thickness,flower length
+Cercis_canadensis_canadensis_1,0,cordate,large,thin,small
+Cercis_canadensis_canadensis_2,0,cordate,large,thin,small
+Cercis_canadensis_canadensis_3,0,cordate,large,thin,small
+Cercis_canadensis_canadensis_4,0,cordate,large,thin,small
+Cercis_canadensis_texensis_1,0,intermediate,intermediate,thick,small
+Cercis_canadensis_texensis_2,0,intermediate,intermediate,thick,small
+Cercis_canadensis_texensis_3,0,intermediate,intermediate,thick,small
+Cercis_canadensis_texensis_4,0,intermediate,intermediate,thick,small
+Cercis_canadensis_mexicana_1,1,reniform,small,thick,small
+Cercis_canadensis_mexicana_2,1,reniform,small,thick,small
+Cercis_canadensis_mexicana_3,1,reniform,small,thick,small
+Cercis_canadensis_mexicana_4,1,reniform,small,thick,small
+Cercis_canadensis_mexicana_5,1,reniform,small,thick,small
+Cercis_canadensis_mexicana_6,1,reniform,small,thick,small
+Cercis_canadensis_mexicana_SSMO_1,1,cordate,intermediate,thin,small
+Cercis_canadensis_mexicana_SSMO_2,1,cordate,intermediate,thin,small
+Cercis_canadensis_mexicana_SSMO_3,1,cordate,intermediate,thin,small
+Cercis_canadensis_mexicana_SSMO_4,1,cordate,intermediate,thin,small
+Cercis_canadensis_mexicana_SSMO_5,1,cordate,intermediate,thin,small
+Cercis_occidentalis_CP1,0,reniform,small,thick,large
+Cercis_occidentalis_CP2,0,reniform,small,thick,large
+Cercis_occidentalis_CP3,0,reniform,small,thick,large
+Cercis_occidentalis_CP4,0,reniform,small,thick,large

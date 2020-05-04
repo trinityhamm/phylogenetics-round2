@@ -1,0 +1,39 @@
+#NEXUS
+
+	Begin taxa;
+	Dimensions ntax=28;
+	Taxlabels
+		Cercis_canadensis_canadensis_1
+		Cercis_canadensis_canadensis_2
+		Cercis_canadensis_canadensis_3
+		Cercis_canadensis_canadensis_4
+		Cercis_canadensis_mexicana_1
+		Cercis_canadensis_mexicana_2
+		Cercis_canadensis_mexicana_3
+		Cercis_canadensis_mexicana_4
+		Cercis_canadensis_mexicana_5
+		Cercis_canadensis_mexicana_6
+		Cercis_canadensis_mexicana_SSMO_1
+		Cercis_canadensis_mexicana_SSMO_2
+		Cercis_canadensis_mexicana_SSMO_3
+		Cercis_canadensis_mexicana_SSMO_4
+		Cercis_canadensis_mexicana_SSMO_5
+		Cercis_canadensis_texensis_1
+		Cercis_canadensis_texensis_2
+		Cercis_canadensis_texensis_3
+		Cercis_canadensis_texensis_4
+		Cercis_occidentalis_CP1
+		Cercis_occidentalis_CP2
+		Cercis_occidentalis_CP3
+		Cercis_occidentalis_CP4
+		Cercis_occidentalis_CP5
+		Cercis_siliquastrum_1
+		Cercis_siliquastrum_2
+		Cercis_siliquastrum_3
+		Cercis_siliquastrum_4
+		;
+End;
+
+Begin trees;
+tree TREE1 = [&R]((((((((Cercis_canadensis_mexicana_1[&index=13]:0.071373,Cercis_canadensis_texensis_3[&index=5]:0.071373)[&index=29,posterior=0.161226,age_95%_HPD={0,0.189602}]:0.107217,(Cercis_canadensis_mexicana_2[&index=14]:0.084155,Cercis_canadensis_mexicana_3[&index=15]:0.084155)[&index=30,posterior=0.143238,age_95%_HPD={0,0.22045}]:0.094435)[&index=31,posterior=0.069953,age_95%_HPD={0.017435,0.3368}]:0.060544,Cercis_canadensis_texensis_1[&index=8]:0.239134)[&index=32,posterior=0.456362,age_95%_HPD={0.068235,0.462388}]:0.044439,Cercis_canadensis_mexicana_4[&index=3]:0.283572)[&index=33,posterior=0.489674,age_95%_HPD={0.078875,0.535968}]:0.152570,Cercis_canadensis_mexicana_5[&index=16]:0.436143)[&index=34,posterior=0.172552,age_95%_HPD={0.184384,0.728197}]:0.165272,((((Cercis_canadensis_mexicana_SSMO_1[&index=25]:0.091922,Cercis_canadensis_mexicana_SSMO_5[&index=26]:0.091922)[&index=35,posterior=0.198534,age_95%_HPD={0.000286,0.287729}]:0.064728,Cercis_canadensis_mexicana_SSMO_3[&index=24]:0.156650)[&index=36,posterior=0.134577,age_95%_HPD={0.013924,0.387856}]:0.198637,(Cercis_canadensis_mexicana_SSMO_2[&index=27]:0.155490,Cercis_canadensis_mexicana_SSMO_4[&index=28]:0.155490)[&index=37,posterior=0.111925,age_95%_HPD={0.016862,0.412896}]:0.199796)[&index=38,posterior=1.000000,age_95%_HPD={0.10814,0.649169}]:0.115666,(Cercis_canadensis_mexicana_6[&index=1]:0.263311,Cercis_canadensis_texensis_4[&index=11]:0.263311)[&index=39,posterior=0.219853,age_95%_HPD={0.024479,0.572167}]:0.207642)[&index=40,posterior=0.096602,age_95%_HPD={0.225389,0.758095}]:0.130462)[&index=41,posterior=0.153231,age_95%_HPD={0.35423,0.839204}]:0.074448,(((Cercis_canadensis_canadensis_3[&index=6]:0.076598,Cercis_canadensis_texensis_2[&index=7]:0.076598)[&index=42,posterior=0.211193,age_95%_HPD={0.000282,0.216456}]:0.047947,Cercis_canadensis_canadensis_4[&index=12]:0.124545)[&index=43,posterior=0.091939,age_95%_HPD={0.004961,0.275743}]:0.151275,(Cercis_canadensis_canadensis_1[&index=9]:0.104621,Cercis_canadensis_canadensis_2[&index=17]:0.104621)[&index=44,posterior=0.134577,age_95%_HPD={0.013173,0.234601}]:0.171198)[&index=45,posterior=1.000000,age_95%_HPD={0.062248,0.510779}]:0.400043)[&index=46,posterior=0.975350,age_95%_HPD={0.44635,0.916529}]:0.324139,((((Cercis_occidentalis_CP1[&index=21]:0.123559,Cercis_occidentalis_CP5[&index=23]:0.123559)[&index=47,posterior=0.427049,age_95%_HPD={0.000238,0.32778}]:0.151103,Cercis_occidentalis_CP4[&index=19]:0.274662)[&index=48,posterior=0.336442,age_95%_HPD={0.031133,0.538531}]:0.155916,(Cercis_occidentalis_CP2[&index=20]:0.092696,Cercis_occidentalis_CP3[&index=22]:0.092696)[&index=49,posterior=1.000000,age_95%_HPD={0,0.284216}]:0.337883)[&index=50,posterior=1.000000,age_95%_HPD={0.149853,0.764261}]:0.461880,(((Cercis_siliquastrum_1[&index=2]:0.447151,Cercis_siliquastrum_4[&index=4]:0.447151)[&index=51,posterior=0.207195,age_95%_HPD={0.20832,0.685238}]:0.061268,Cercis_siliquastrum_2[&index=18]:0.508419)[&index=52,posterior=0.968021,age_95%_HPD={0.263559,0.730944}]:0.127816,Cercis_siliquastrum_3[&index=10]:0.636235)[&index=53,posterior=0.971352,age_95%_HPD={0.399393,0.879246}]:0.256223)[&index=54,posterior=0.430380,age_95%_HPD={0.73337,0.999045}]:0.107543)[&index=55,posterior=1.000000,age_95%_HPD={1,1}]:0.000000;
+End;

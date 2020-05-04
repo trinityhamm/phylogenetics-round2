@@ -1,0 +1,125 @@
+Analysis started at: 05/03/20 22:07:51
+Using BPP version: 4.2.9
+Command: ..\bpp-4.2.9-win-x86_64\bpp --cfile canadensis_bpp.ctl 
+
+COMPRESSED ALIGNMENTS
+
+19 108 P
+e^can1      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGGA TTTAAATTAT ACCCCCCCCC CCCCCCCCCC GGGGGGGRTT TYYXXXXXXX XXXXXXXXXX XXXXXXXX
+f^can2      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGGA TTTAAATTGX XCCCCCCCCC CCCCCCCCCC GGGGGGGRTT TCCAXXXXXX XXXXXXXXXX XXXXXXXX
+g^can3      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGGA TTTAAATXGT ACCCCCCCCC CCCCCCCCCM GGGGGGGGTY YCCAAXXXXX XXXXXXXXXX XXXXXXXX
+h^can4      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGGA TTTAAAXTGT ACCCCCCCCC CCCCCCCCCC GGGGGGGGTT TCYAXXXXXX XXXXXXXXXX XXXXXXXX
+i^tex1      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGTT CXXXXXXXGT ACCCCCCCCC CCCYYYYYYM GGGGGGRGTC CCCAXTAACA TXXXXXXXXX XXXXXXXX
+j^tex2      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGGA TTTAAAXTGT ACCCCCCCCC CCCCCYYYYC GGGGGRRGTY YCCAXXXXXX XATXXXXXXX XXXXXXXX
+k^mex1      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGTT CXXXXXXXGT XCCCCCCCCC CCYYYCCYYC GGGGGGRGYC YCCAXTAACA XXXXXXXXXX XXXXXXXX
+l^mex2      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCXXXTT CXXXXXXXGT ACCCCCCCCC CMYYYYYYYM GGGGGGRGYC YCCAXTAACA XXXATXXXXX XXXXXXXX
+m^mex3      CATGACGAAA GTAATCGTGG TTTTTAATAA TAATCCCGTT CXXXXXXXGT ACCCCCCCCC CCYCYCCCCM GGGGGGGGYC YCCAXTAACA XXXATXXXXX XXXXXXXX
+n^mex4      CATGACGAAA GTAATCGTGG TTTTTAXXXX XXXXXCCGTX XTTXXXXTXX XCCCCCCCCC CCCCCCYYYC GGGGGGRGYY YCCAXTAXXX XXXXXTACXX XXXXXXXX
+o^mex5      CATGACGAAA GTAATCGTGC XXXXXXATAA TTXXXXXXTX XTXAAXXTGT ACCCCCCCYY YCYCYYYYYM GGGGGGRGYC YCCAXTXXXX XXXXXTAXTG TXXXXXXX
+p^mex6      CATGACGAAX XXXXXXXXXG TXXXXXATAX XXAXXXXXTA XXXXXXXXGT ACCCCSYYCC YMYYCYYYYM GGGGGGRGYC YYCAXTXAXX XXXXXXXXTX XCXXXXXX
+q^tex3      CATGACGAAA GTAATCXXXG TTTXXXATAA XAATXXXXTT CXXXXXXXGT ACCCCCCCCC YMYYYYYYYM GGGRRGRGYC YCCAXTAACX XXXAXXXXTX XXAXXXXX
+r^tex4      CATGACGXXA GTAXXXGXXG TTXXXXAGXX XXATXXXXTA TXXXXXXXGT ACCYYCCCCY YCCYYCYYYM GGRGGGRGTY CCCAXTXXXX XXXXXXXXTX XXXTXXXX
+s^SSMO1     CATGXXXAAA GXXATCXXXG XXTTTXATAA TAATCCXXTA TXXXXXXXGT ACCCYCCCCC YCCYYYYYYM GRGGRGRGTC CCCAXTXXXX XXXXXXXXTX XXXXAXXX
+t^SSMO2     CATGACXAAA XXXATXXXXG TXXTXXATAA TAATCXXXTA TTXAXXXTGT ACCCYCCCCC YCCYYYYYYM RGGGRGRGTC CCCAATXXXX XAXXXTXXTG XXXXXTXX
+u^SSMO3     CATGAXXAAA GTXAXXGTXG TXXTXXATAA TAATCXXXTA TXXXXXTXGT AYYCYCCYCC YCCYYYYYYM RGGGRGRGTC CCCAXTXXXX XXXXXXXXTX XXXXXXTX
+v^SSMO4     CTXXAXXAXA GTXATCGTXG TXTTTXATXA TAATCCCXTA TXXXXXXXGT ACYCYCCYCC YCCYYYYYYM GRGGRGGGTC CCCAXTXXXX XXXXXXXXXX XXXXXXXX
+w^SSMO5     CATXAXXAXA GTXATCGTXG TXTTTXATXA TAATCCXXTA TXXXXXXXGT ACYCYCCYCC YCCYYYYCYM GRGGRGRGTC CCCAXTXXXX XXXXXXXXXX XXXXXXXX
+4133 1 1 28 5 1 6 210 2 26 7 6 2 17 28 4 1 15 16 2 19 8 4 6 9 22 194 1 3 5 1 1 10 10 16 1 5 13 1 1 1 7 2 7 1 2 1 1 1 3 8 1 1 1 2 1 3 1 2 1 1 1 1 1 1 1 1 1 3 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 11 10 2 24 1 10 2 19 3 1 11 1 2 1 31 15 24 10 2 6 508
+
+
+Per-locus sequences in data and 'species&tree' tag:
+C.File | Data |                Status                | Population
+-------+------+--------------------------------------+-----------
+     2 |    4 | [OK]                                 | c         
+     2 |    4 | [OK]                                 | t         
+     2 |   11 | [OK]                                 | m         
+
+
+Initial MSC density and log-likelihood of observing data:
+log-PG0 = 80.694788   log-L0 = -7600.688082
+
+0:00 taken to read and process data..
+Restarting timer...
+
+
+-*- Glossary of terms -*-
+
+  Prgs: progress of MCMC run (negative progress means burnin)
+  Gage: gene-tree age proposal
+  Gspr: gene-tree SPR proposal
+  thet: species tree theta proposal
+   tau: species tree tau proposal
+   mix: mixing proposal
+    sp: number of delimited specices
+    np: number of parameters
+  mldp: most likelely delimitation and probability
+mthet1: root node mean theta
+ mtau1: root node mean tau
+log-PG: log-probability of gene trees (MSC)
+ log-L: mean log-L of observing data
+
+     |     Acceptance proportions (pjump)     |
+Prgs | Gage Gspr thet  tau  mix   Sspr     rj | sp np        mldp   mtau1     log-PG        log-L
+-------------------------------------------------------------------------------------------------
+
+                      Gage    Gspr    thet     tau     mix lrht  phi   pi qmat alfa mubr nubr mu_i nu_i brte
+Current Pjump:     0.68278 0.00002 0.00000 0.08333 0.90880   -    -    -    -    -    -    -    -    -    - 
+Current finetune:  0.01000 0.02000 0.03000 0.04000 0.05000   -    -    -    -    -    -    -    -    -    - 
+New finetune:      0.03607 0.00020 0.00030 0.01034 0.68031   -    -    -    -    -    -    -    -    -    - 
+
+
+                      Gage    Gspr    thet     tau     mix lrht  phi   pi qmat alfa mubr nubr mu_i nu_i brte
+Current Pjump:     0.68460 0.16591 0.00000 0.00000 0.16680   -    -    -    -    -    -    -    -    -    - 
+Current finetune:  0.03607 0.00020 0.00030 0.01034 0.68031   -    -    -    -    -    -    -    -    -    - 
+New finetune:      0.13101 0.00010 0.00000 0.00010 0.35806   -    -    -    -    -    -    -    -    -    - 
+
+
+                      Gage    Gspr    thet     tau     mix lrht  phi   pi qmat alfa mubr nubr mu_i nu_i brte
+Current Pjump:     0.68851 0.23864 0.00000 0.00000 0.42400   -    -    -    -    -    -    -    -    -    - 
+Current finetune:  0.13101 0.00010 0.00000 0.00010 0.35806   -    -    -    -    -    -    -    -    -    - 
+New finetune:      0.48288 0.00008 0.00000 0.00000 0.55220   -    -    -    -    -    -    -    -    -    - 
+
+   0%  0.69 0.26 0.00 0.00 0.25 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  110.07560  -7196.59821  0:05
+
+                      Gage    Gspr    thet     tau     mix lrht  phi   pi qmat alfa mubr nubr mu_i nu_i brte
+Current Pjump:     0.68964 0.26036 0.00000 0.00000 0.25280   -    -    -    -    -    -    -    -    -    - 
+Current finetune:  0.48288 0.00008 0.00000 0.00000 0.55220   -    -    -    -    -    -    -    -    -    - 
+New finetune:      1.78748 0.00007 0.00000 0.00000 0.45450   -    -    -    -    -    -    -    -    -    - 
+
+   5%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  105.90686  -7196.58250  0:09
+  10%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  104.35084  -7196.59822  0:14
+  15%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  100.48511  -7196.58377  0:19
+  20%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  111.80449  -7196.59074  0:24
+  25%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  105.69974  -7196.59376  0:28
+  30%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  110.98232  -7196.59679  0:33
+  35%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  107.59453  -7196.59946  0:38
+  40%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  106.25174  -7196.59606  0:42
+  45%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  108.49418  -7196.59306  0:47
+  50%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  113.91772  -7196.59061  0:52
+  55%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  109.21842  -7196.59335  0:57
+  60%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  104.89588  -7196.59883  1:01
+  65%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  106.77725  -7196.60667  1:06
+  70%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  110.95994  -7196.59972  1:11
+  75%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  109.74962  -7196.60052  1:15
+  80%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  110.16740  -7196.59562  1:20
+  85%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  111.92884  -7196.59312  1:25
+  90%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  107.62797  -7196.59240  1:30
+  95%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  103.59451  -7196.59202  1:34
+ 100%  0.69 0.28 0.00 0.00 0.33 0.0000 0.0000    1  0 P[1]=1.0000 0.0000  104.13674  -7196.59254  1:39
+
+1:39 spent in MCMC
+
+
+(A) List of best models (count postP #species SpeciesTree)
+100000 1.000000 1.000000 1  (cmt)  cmt;
+
+(B) 1 species delimitations & their posterior probabilities
+100000 1.000000   1 (cmt)
+
+(C) 1 delimited species & their posterior probabilities
+100000 1.000000 cmt
+
+(D) Posterior probability for # of species
+P[1] = 1.000000  prior[1] = 0.333333
+P[2] = 0.000000  prior[2] = 0.333333
+P[3] = 0.000000  prior[3] = 0.333333
